@@ -1,0 +1,6 @@
+{
+  "name": "ISP Reseller Billing Panel",
+  "description": "A local ISP reseller billing and automated customer self-recharge portal for Bangladesh. Manage custom packages, customers, bKash/Nagad/Rocket settings, and simulate main ISP API activations with profit protection.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
