@@ -128,7 +128,8 @@ export const INITIAL_SETTINGS: SystemSettings = {
   parentIspApiUrl: 'https://api.parent-isp.com.bd/v2/reseller/activate_pppoe',
   parentIspUsername: 'tanbin_reseller_dhaka',
   parentIspBalance: 6450, // Reseller balance in Parent ISP pool
-  autoApprovePayments: true // If true, payment is validated and API triggers automatically
+  autoApprovePayments: true, // If true, payment is validated and API triggers automatically
+  adminPassword: 'admin' // Default reseller password
 };
 
 export const INITIAL_LOGS: ApiLog[] = [

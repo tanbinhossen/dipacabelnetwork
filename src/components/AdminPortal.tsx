@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Package, Customer, Transaction, SystemSettings, ApiLog } from '../types';
 import { 
   Users, Layers, DollarSign, Settings, Terminal, Plus, Trash2, 
-  RefreshCw, TrendingUp, Key, Cpu, HelpCircle, AlertCircle, Save 
+  RefreshCw, TrendingUp, Key, Cpu, HelpCircle, AlertCircle, Save,
+  Lock
 } from 'lucide-react';
 
 interface AdminPortalProps {
@@ -216,7 +217,7 @@ export default function AdminPortal({
           className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-left ${activeTab === 'settings' ? 'bg-amber-500 text-white shadow-xs' : 'text-slate-600 hover:bg-slate-100'}`}
         >
           <Settings size={18} />
-          <span>Payment & API Config</span>
+          <span>Settings & Password (পাসওয়ার্ড ও সেটিংস)</span>
         </button>
 
         <button
@@ -788,8 +789,47 @@ export default function AdminPortal({
         {activeTab === 'settings' && (
           <form onSubmit={handleSaveSettings} className="space-y-6">
             <div className="border-b border-gray-100 pb-4">
-              <h2 className="text-xl font-black text-slate-900 tracking-tight">Payment Gateways & ISP API Settings</h2>
-              <p className="text-xs text-gray-500">Configure your personal bKash or Nagad wallet numbers and hook into parent ISP activation routines</p>
+              <h2 className="text-xl font-black text-slate-900 tracking-tight">পাসওয়ার্ড ও গেটওয়ে সেটিংস (Password & Gateway Settings)</h2>
+              <p className="text-xs text-gray-500">Configure personal gateway numbers, modify admin panel security passwords, and connect parent billing APIs</p>
+            </div>
+
+            {/* Account Settings & Password Configuration Block */}
+            <div className="bg-amber-50/40 border border-amber-200/50 rounded-2xl p-5 space-y-4 shadow-xs">
+              <h3 className="text-sm font-extrabold text-slate-800 flex items-center gap-1.5 border-b border-amber-200/50 pb-2">
+                <Lock size={18} className="text-amber-500" />
+                পাসওয়ার্ড এবং অ্যাডমিন প্যানেল সেটিংস (Admin Panel Access & Security Setup)
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-slate-700">Set Admin Panel Password (নতুন এডমিন পাসওয়ার্ড দিন) <span className="text-red-500">*</span></label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs font-mono text-slate-800 focus:outline-hidden focus:border-amber-400 focus:ring-1 focus:ring-amber-400 bg-white"
+                    value={editedSettings.adminPassword || ''}
+                    onChange={(e) => setEditedSettings({ ...editedSettings, adminPassword: e.target.value })}
+                    placeholder="e.g. admin"
+                    required
+                  />
+                  <p className="text-[10.5px] text-gray-400 mt-1 leading-relaxed">
+                    প্যাসের মাধ্যমে এই প্যানেলে প্রবেশ সুরক্ষিত থাকবে। ডিফল্ট কোড হলো <span className="font-mono font-bold bg-slate-100 px-1 py-0.2 rounded border border-slate-250 text-slate-700 font-bold">admin</span>।
+                  </p>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-xs font-bold text-slate-700">Company / Brand Name (আপনার ব্র্যান্ড বা ব্যবসার নাম)</label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs font-semibold text-slate-800 focus:outline-hidden focus:border-amber-400 focus:ring-1 focus:ring-amber-400 bg-white"
+                    value={editedSettings.resellerCompanyName}
+                    onChange={(e) => setEditedSettings({ ...editedSettings, resellerCompanyName: e.target.value })}
+                    required
+                  />
+                  <p className="text-[10.5px] text-gray-400 mt-1 leading-relaxed">
+                    এই নামটি কাস্টমার পোর্টালে গ্রাহকদের কাছে শো করবে।
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -802,16 +842,6 @@ export default function AdminPortal({
                 </h3>
 
                 <div className="space-y-3">
-                  <div className="space-y-1">
-                    <label className="block text-xs font-semibold text-gray-600">Your Brand / Business Name</label>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs"
-                      value={editedSettings.resellerCompanyName}
-                      onChange={(e) => setEditedSettings({ ...editedSettings, resellerCompanyName: e.target.value })}
-                      required
-                    />
-                  </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">

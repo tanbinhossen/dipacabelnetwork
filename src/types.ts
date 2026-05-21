@@ -49,6 +49,7 @@ export interface SystemSettings {
   parentIspUsername: string;
   parentIspBalance: number;
   autoApprovePayments: boolean;
+  adminPassword?: string; // Persistent admin login passcode (Optional or string)
 }
 
 export interface ApiLog {

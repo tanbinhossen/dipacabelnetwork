@@ -9,7 +9,7 @@ import AdminPortal from './components/AdminPortal';
 import BkashSimulator from './components/BkashSimulator';
 import { 
   Wifi, ShieldAlert, Cpu, Heart, CheckCircle2, SwitchCamera, 
-  User, ShieldCheck, Terminal, HelpCircle 
+  User, ShieldCheck, Terminal, HelpCircle, Eye, EyeOff 
 } from 'lucide-react';
 
 export default function App() {
@@ -48,6 +48,12 @@ export default function App() {
     customer: Customer;
     pack: Package;
   } | null>(null);
+
+  // Reseller panel password authentication states
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [adminPasswordInput, setAdminPasswordInput] = useState('');
+  const [showPasswordError, setShowPasswordError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Sync with localStorage on state alterations
   useEffect(() => {
@@ -304,7 +310,10 @@ export default function App() {
           {/* Interactive Multi-mode View Switcher */}
           <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200/50">
             <button
-              onClick={() => setViewMode('customer')}
+              onClick={() => {
+                setViewMode('customer');
+                setIsAdminAuthenticated(false);
+              }}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all ${
                 viewMode === 'customer' 
                   ? 'bg-white text-slate-800 shadow-sm' 
@@ -344,6 +353,87 @@ export default function App() {
             onInitiatePayment={(method, customer, pack) => setActiveSim({ method, customer, pack })}
             onManualPayment={handleManualPaymentSubmit}
           />
+        ) : !isAdminAuthenticated ? (
+          <div className="max-w-md mx-auto my-12 animate-slide-up">
+            <div className="bg-white border border-slate-200/50 rounded-3xl p-8 shadow-xs relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-amber-500"></div>
+              
+              <div className="text-center mb-6">
+                <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4 border border-amber-100">
+                  <ShieldAlert size={26} className="animate-pulse" />
+                </div>
+                <h2 className="text-xl font-black text-slate-800 tracking-tight">রিসেলার প্যানেল লক (Secure Gate)</h2>
+                <p className="text-xs text-slate-500 mt-1">Authorized Access Only • Tanbin Reseller Panel</p>
+              </div>
+
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (adminPasswordInput === (settings.adminPassword || 'admin')) {
+                    setIsAdminAuthenticated(true);
+                    setShowPasswordError(false);
+                    setAdminPasswordInput('');
+                  } else {
+                    setShowPasswordError(true);
+                  }
+                }}
+                className="space-y-4"
+              >
+                <div className="space-y-1 relative">
+                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide">
+                    এডমিন পাসওয়ার্ড দিন (Enter Code)
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="w-full px-4.5 py-3 border border-gray-200 rounded-xl text-sm font-mono focus:outline-hidden focus:border-amber-400 focus:ring-1 focus:ring-amber-400 bg-slate-50/50 pr-10"
+                      placeholder="••••••••"
+                      value={adminPasswordInput}
+                      onChange={(e) => {
+                        setAdminPasswordInput(e.target.value);
+                        if (showPasswordError) setShowPasswordError(false);
+                      }}
+                      required
+                      autoFocus
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-slate-650 transition-colors"
+                      title={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                  {showPasswordError && (
+                    <p className="text-xs text-red-500 font-bold mt-1.5">
+                      ❌ ভুল পাসওয়ার্ড! আবার চেষ্টা করুন (Incorrect Password!)
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full py-3.5 bg-slate-800 hover:bg-slate-900 border border-slate-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-xs cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <ShieldCheck size={16} className="text-amber-500" />
+                  <span>প্যানেলে প্রবেশ করুন (Access Dashboard)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setViewMode('customer')}
+                  className="w-full py-2.5 text-slate-500 hover:text-slate-800 text-[11px] font-bold transition-all text-center cursor-pointer"
+                >
+                  কাস্টমার পোর্টালে ফিরে যান (Back to Customer Portal)
+                </button>
+              </form>
+            </div>
+            
+            <p className="text-[10px] text-gray-400 text-center mt-4">
+              সুরক্ষিত রিসেলার বিলিং গেট • ডেমো পাসওয়ার্ড: <span className="font-mono bg-white border border-slate-200 px-1 py-0.2 rounded font-bold text-slate-500">admin</span>
+            </p>
+          </div>
         ) : (
           <AdminPortal
             packages={packages}
